@@ -2,9 +2,18 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Datei-Download</title>
+    <title>Download xylo</title>
 </head>
 <body>
-    <a href="xylo.zip" download>Download starten</a>
+    <script>
+        window.onload = function() {
+            const link = document.createElement('a');
+            link.href = 'xylo.zip'; // Pfad zur Datei
+            link.download = 'xylo.zip'; // Name der heruntergeladenen Datei
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    </script>
 </body>
 </html>
