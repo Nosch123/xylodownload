@@ -1,77 +1,170 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Download — Xylo</title>
-<style>
-  :root{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;}
-  body{display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#0f172a;color:#e6eef8}
-  .card{width:320px;padding:28px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));text-align:center}
-  h1{font-size:18px;margin:0 0 12px}
-  p{margin:8px 0 18px;color:#a9b3c7;font-size:14px}
-  .status{font-weight:700;padding:10px;border-radius:8px}
-  .granted{background:#e6ffe8;color:#073b1f}
-  .denied{background:#ffe6e6;color:#5b0b0b}
-  .btn{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:8px;background:#0ea5a4;color:white;text-decoration:none;cursor:pointer}
-  .small{font-size:13px;color:#9fb0c4;margin-top:10px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYLO Executor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f0f;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            padding: 20px;
+            border-bottom: 2px solid #ff0000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            color: #ff0000;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .download-container {
+            text-align: center;
+            background-color: #1a1a1a;
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .download-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #ff0000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .download-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+        
+        .download-btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .access-denied {
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #333;
+        }
+    </style>
 </head>
 <body>
-  <div class="card" id="card">
-    <h1>Download: Xylo</h1>
-    <p id="refText">Prüfe Herkunft...</p>
-    <div id="status" class="status" aria-live="polite"></div>
-    <a id="downloadBtn" class="btn" style="display:none">Download starten</a>
-    <div class="small" id="fallback" style="display:none">
-      Wenn der Download nicht startet, kopiere diesen Link:<br>
-      <code id="directLink">xylo.zip</code>
+    <div class="header">
+        <div class="logo-container">
+            <!-- Ersetze "logo.png" mit dem tatsächlichen Pfad zu deinem Logo -->
+            <img src="logo.png" alt="XYLO Logo" class="logo-img">
+            <div class="logo-text">XYLO</div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    (function(){
-      const allowedHost = 'linkvertise.com';
-      const statusEl = document.getElementById('status');
-      const refText = document.getElementById('refText');
-      const btn = document.getElementById('downloadBtn');
-      const fallback = document.getElementById('fallback');
-      const directLinkEl = document.getElementById('directLink');
+    <div class="main-content">
+        <div class="download-container">
+            <h2 class="download-title">XYLO Executor</h2>
+            <p>Click the button below to download XYLO</p>
+            <button id="downloadBtn" class="download-btn">Download XYLO</button>
+            <p class="access-denied" id="accessDenied">Access Denied - Please try again and do the linkvertise steps</p>
+        </div>
+    </div>
 
-      // Set your actual file URL here (could be a protected PHP endpoint, see server example)
-      const fileUrl = 'xylo.zip'; // <-- oder '/download.php?file=xylo.zip'
+    <div class="footer">
+        API: Xeno
+    </div>
 
-      // Evaluate referrer
-      const ref = document.referrer || '';
-      refText.textContent = ref ? 'Referrer: ' + ref : 'Kein Referrer vorhanden';
-
-      const isAllowed = ref.toLowerCase().includes(allowedHost);
-
-      if (isAllowed) {
-        statusEl.textContent = 'Access Granted';
-        statusEl.className = 'status granted';
-        btn.style.display = 'inline-block';
-        btn.href = fileUrl;
-        // Click automatisch nach kurzer Verzögerung (optional). Entfernen, wenn Nutzer-Interaktion gewünscht.
-        setTimeout(()=> {
-          // Start download programmgesteuert
-          const a = document.createElement('a');
-          a.href = fileUrl;
-          a.download = '';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          // zeig Fallback-Link falls Browser blockiert
-          fallback.style.display = 'block';
-          directLinkEl.textContent = fileUrl;
-        }, 600);
-      } else {
-        statusEl.textContent = 'Access Denied';
-        statusEl.className = 'status denied';
-        btn.style.display = 'none';
-        fallback.style.display = 'none';
-      }
-    })();
-  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const accessDenied = document.getElementById('accessDenied');
+            
+            // Prüfen, ob der Nutzer von linkvertise.com kommt
+            function checkReferrer() {
+                const referrer = document.referrer;
+                return referrer.includes('linkvertise.com');
+            }
+            
+            downloadBtn.addEventListener('click', function() {
+                if (checkReferrer()) {
+                    // Erstelle einen temporären Link für den Download
+                    const link = document.createElement('a');
+                    link.href = 'xylo.zip'; // Ersetze mit dem tatsächlichen Dateipfad
+                    link.download = 'xylo.zip';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    accessDenied.style.display = 'block';
+                    downloadBtn.disabled = true;
+                    downloadBtn.textContent = 'Download not possible';
+                    
+                    // Nach 5 Sekunden zurücksetzen
+                    setTimeout(function() {
+                        accessDenied.style.display = 'none';
+                        downloadBtn.disabled = false;
+                        downloadBtn.textContent = 'Download XYLO';
+                    }, 5000);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
