@@ -1,19 +1,77 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Download xylo</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Download — Xylo</title>
+<style>
+  :root{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;}
+  body{display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#0f172a;color:#e6eef8}
+  .card{width:320px;padding:28px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));text-align:center}
+  h1{font-size:18px;margin:0 0 12px}
+  p{margin:8px 0 18px;color:#a9b3c7;font-size:14px}
+  .status{font-weight:700;padding:10px;border-radius:8px}
+  .granted{background:#e6ffe8;color:#073b1f}
+  .denied{background:#ffe6e6;color:#5b0b0b}
+  .btn{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:8px;background:#0ea5a4;color:white;text-decoration:none;cursor:pointer}
+  .small{font-size:13px;color:#9fb0c4;margin-top:10px}
+</style>
 </head>
 <body>
-    <script>
-        window.onload = function() {
-            const link = document.createElement('a');
-            link.href = 'xylo.zip'; // Pfad zur Datei
-            link.download = 'xylo.zip'; // Name der heruntergeladenen Datei
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-    </script>
+  <div class="card" id="card">
+    <h1>Download: Xylo</h1>
+    <p id="refText">Prüfe Herkunft...</p>
+    <div id="status" class="status" aria-live="polite"></div>
+    <a id="downloadBtn" class="btn" style="display:none">Download starten</a>
+    <div class="small" id="fallback" style="display:none">
+      Wenn der Download nicht startet, kopiere diesen Link:<br>
+      <code id="directLink">xylo.zip</code>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const allowedHost = 'linkvertise.com';
+      const statusEl = document.getElementById('status');
+      const refText = document.getElementById('refText');
+      const btn = document.getElementById('downloadBtn');
+      const fallback = document.getElementById('fallback');
+      const directLinkEl = document.getElementById('directLink');
+
+      // Set your actual file URL here (could be a protected PHP endpoint, see server example)
+      const fileUrl = 'xylo.zip'; // <-- oder '/download.php?file=xylo.zip'
+
+      // Evaluate referrer
+      const ref = document.referrer || '';
+      refText.textContent = ref ? 'Referrer: ' + ref : 'Kein Referrer vorhanden';
+
+      const isAllowed = ref.toLowerCase().includes(allowedHost);
+
+      if (isAllowed) {
+        statusEl.textContent = 'Access Granted';
+        statusEl.className = 'status granted';
+        btn.style.display = 'inline-block';
+        btn.href = fileUrl;
+        // Click automatisch nach kurzer Verzögerung (optional). Entfernen, wenn Nutzer-Interaktion gewünscht.
+        setTimeout(()=> {
+          // Start download programmgesteuert
+          const a = document.createElement('a');
+          a.href = fileUrl;
+          a.download = '';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          // zeig Fallback-Link falls Browser blockiert
+          fallback.style.display = 'block';
+          directLinkEl.textContent = fileUrl;
+        }, 600);
+      } else {
+        statusEl.textContent = 'Access Denied';
+        statusEl.className = 'status denied';
+        btn.style.display = 'none';
+        fallback.style.display = 'none';
+      }
+    })();
+  </script>
 </body>
 </html>
