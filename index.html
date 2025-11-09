@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xylo</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<style>
+  * {margin:0; padding:0; box-sizing:border-box;}
+  body, html {height:100%; font-family:'Inter',sans-serif; overflow-x:hidden; scroll-behavior:smooth;}
+
+  /* Loading Screen */
+  #loading-screen {
+    position:fixed;
+    top:0; left:0; width:100%; height:100%;
+    background:#0a0a0a;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    transition:opacity 0.5s ease, visibility 0.5s ease;
+  }
+  #loading-screen.hidden {opacity:0; visibility:hidden;}
+  #loading-screen h1 {margin-bottom:1rem; font-size:2rem; color:#ff2222;}
+  #loading-screen .progress-bar {
+    width:200px; height:6px; background:#222; border-radius:3px;
+    overflow:hidden; margin-top:10px;
+  }
+  #loading-screen .progress-bar-inner {
+    width:0%; height:100%; background:#ff2222;
+    animation: loadingAnim 2s linear forwards;
+  }
+  @keyframes loadingAnim {0%{width:0;}100%{width:100%;}}
+
+  /* Animated Gradient Background */
+  body {
+    background: linear-gradient(-45deg, #0a0a0a, #1a0000, #0a0a0a, #330000);
+    background-size: 400% 400%;
+    animation: gradientBG 20s ease infinite;
+    color:#fff;
+    position: relative;
+  }
+  @keyframes gradientBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+
+  /* Floating Shapes */
+  .floating-shape {
+    position: absolute;
+    background: rgba(255, 34, 34, 0.2);
+    border:1px solid rgba(255,34,34,0.5);
+    border-radius:0.25rem;
+    animation: float 15s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes float {
+    0% {transform:translateY(0) rotate(0deg);}
+    25% {transform:translateY(-50px) rotate(45deg);}
+    50% {transform:translateY(0px) rotate(90deg);}
+    75% {transform:translateY(50px) rotate(135deg);}
+    100% {transform:translateY(0) rotate(180deg);}
+  }
+
+  /* Navbar */
+  nav {
+    position: fixed;
+    top:0; left:0; width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem 2rem;
+    background: rgba(0,0,0,0.8);
+    z-index:999;
+    backdrop-filter: blur(5px);
+  }
+  nav .logo {font-weight:bold; font-size:1.5rem; color:#ff2222;}
+  nav .nav-buttons button {
+    margin-left:1rem;
+    padding:0.5rem 1rem;
+    border:none;
+    border-radius:0.5rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+  }
+  nav .nav-buttons .download {background:#ff2222; color:#fff;}
+  nav .nav-buttons .download:hover {background:#e00000;}
+  nav .nav-buttons .discord {background:#7289da; color:#fff;}
+  nav .nav-buttons .discord:hover {background:#5b6eae;}
+
+  /* Hero Section */
+  .hero {
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:0 2rem;
+    position:relative;
+    z-index:1;
+  }
+  .hero img {width:120px; margin-bottom:1.5rem;}
+  .hero h1 {font-size:4rem; color:#ff2222; margin-bottom:1rem;}
+  .hero p {color:#aaa; max-width:600px; margin-bottom:2rem; font-size:1.2rem;}
+  .hero a button {background:#ff2222; border:none; padding:1rem 2rem; font-size:1.2rem; font-weight:bold; border-radius:0.5rem; cursor:pointer; transition:0.2s;}
+  .hero a button:hover {background:#e00000;}
+
+  /* Features Section */
+  .features {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:1.5rem;
+    max-width:1200px;
+    margin:0 auto;
+    padding:6rem 2rem;
+    position:relative;
+    z-index:1;
+  }
+  .feature-box {
+    background:#111;
+    border-radius:0.75rem;
+    padding:2rem;
+    text-align:center;
+    transition:transform 0.3s ease, background 0.3s ease;
+    opacity:1;
+    transform:translateY(0);
+  }
+  .feature-box:hover {transform:translateY(-5px); background:#222;}
+  .feature-box h3 {color:#ff2222; margin-bottom:0.5rem; font-size:1.3rem;}
+  .feature-box p {color:#aaa; font-size:1rem;}
+
+  @media(max-width:768px){
+    .hero h1 { font-size:3rem; }
+    .hero p { font-size:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <h1>Loading Xylo…</h1>
+  <div class="progress-bar">
+    <div class="progress-bar-inner"></div>
+  </div>
+</div>
+
+<!-- Floating Shapes -->
+<div class="floating-shape" style="width:50px; height:50px; top:10%; left:5%; animation-duration:12s;"></div>
+<div class="floating-shape" style="width:30px; height:30px; top:20%; left:25%; animation-duration:16s;"></div>
+<div class="floating-shape" style="width:60px; height:60px; top:15%; left:50%; animation-duration:18s;"></div>
+<div class="floating-shape" style="width:40px; height:40px; top:35%; left:70%; animation-duration:20s;"></div>
+<div class="floating-shape" style="width:25px; height:25px; top:50%; left:10%; animation-duration:14s;"></div>
+<div class="floating-shape" style="width:55px; height:55px; top:60%; left:30%; animation-duration:22s;"></div>
+<div class="floating-shape" style="width:35px; height:35px; top:65%; left:55%; animation-duration:19s;"></div>
+<div class="floating-shape" style="width:45px; height:45px; top:75%; left:80%; animation-duration:21s;"></div>
+<div class="floating-shape" style="width:20px; height:20px; top:80%; left:40%; animation-duration:17s;"></div>
+<div class="floating-shape" style="width:50px; height:50px; top:5%; left:90%; animation-duration:15s;"></div>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">Xylo</div>
+  <div class="nav-buttons">
+    <a href="https://discord.gg/tgn4wnUHRy" target="_blank"><button class="discord">Join Discord</button></a>
+    <a href="downloads/xylo.zip" download><button class="download">Download</button></a>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <img src="xylo-logo.png" alt="Xylo Logo">
+  <h1>Xylo</h1>
+  <p>Fast, free, and powerful Roblox executor. Run scripts, attach to multiple clients, and join a growing community.</p>
+  <a href="downloads/xylo.zip" download><button>Download Now</button></a>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="feature-box">
+    <h3>Multi Attach</h3>
+    <p>Attach to multiple clients at once without errors.</p>
+  </div>
+  <div class="feature-box">
+    <h3>High Performance</h3>
+    <p>Run scripts quickly with minimal lag or crashes.</p>
+  </div>
+  <div class="feature-box">
+    <h3>Community</h3>
+    <p>Join our growing community of Xylo users.</p>
+  </div>
+  <div class="feature-box">
+    <h3>Free & Open</h3>
+    <p>Xylo is free to use and fully accessible.</p>
+  </div>
+</section>
+
+<script>
+  // Hide loader when page fully loaded
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('loading-screen');
+    loader.classList.add('hidden');
+  });
+</script>
+
+</body>
+</html>
